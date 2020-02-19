@@ -10,16 +10,18 @@ import {NotificationService} from './core/services/notification.service';
 export class AppComponent implements OnInit {
   title = 'angular8-springboot-websocket';
 
-  webSocketApi: WebsocketApi;
+  // webSocketApi: WebsocketApi;
   greeting: any;
   name: string;
+  message: string
 
-  // constructor(private notificationService: NotificationService) {
-  //   this.getNotification();
-  // }
+  constructor(private notificationService: NotificationService,
+              private websocketApi: WebsocketApi) {
+
+  }
 
   ngOnInit() {
-    this.webSocketApi = new WebsocketApi(new AppComponent());
+    // this.webSocketApi = new WebsocketApi(new AppComponent());
   }
 
   // getNotification() {
@@ -29,16 +31,33 @@ export class AppComponent implements OnInit {
   //     });
   // }
 
-  connect(){
-    this.webSocketApi._connect();
+  connect() {
+    // this.webSocketApi._connect(name);
+    this.websocketApi._connect(name);
+    // this.getQRCodeString();
   }
 
-  disconnect(){
-    this.webSocketApi._disconnect();
+  getQRCodeString() {
+    let model = {
+      id: '001',
+      codeString: 'this is QR code string.....'
+    }
+    this.notificationService.getQRCodeString(model)
+      .subscribe(res => {
+        console.log(res);
+      }, error => {
+        console.error(error);
+      });
   }
 
-  sendMessage(){
-    this.webSocketApi._send(this.name);
+  disconnect() {
+    // this.webSocketApi._disconnect();
+    this.websocketApi._disconnect();
+  }
+
+  sendMessage() {
+    // this.webSocketApi._send(this.name, this.message);
+    this.websocketApi._send(this.name, this.message)
   }
 
   handleMessage(message){
